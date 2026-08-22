@@ -178,7 +178,7 @@
   <pre id="console">Ready. Awaiting execution...</pre>
 
   <script>
-    // 1. بناء كائن Logger وحقنه لمنع توقف دالة doJb()
+    // نظام الطباعة التفاعلي للـ Console
     function printToConsole(msg) {
       const c = document.getElementById("console");
       if (c) {
@@ -187,19 +187,26 @@
       }
     }
 
+    // تعريف كائن logger المطلوب بملف main.js
     window.logger = {
-      info: function(msg) { printToConsole("[INFO] " + msg); },
-      error: function(msg) { printToConsole("[ERROR] " + msg); },
-      log: function(msg) { printToConsole("[LOG] " + msg); }
+      info: function(msg) { printToConsole("[+] " + msg); },
+      error: function(msg) { printToConsole("[!] ERROR: " + msg); },
+      log: function(msg) { printToConsole("[*] " + msg); }
     };
 
-    // 2. ضبط خيار Auto Jailbreak ليكون غير مفعل افتراضياً
+    // التقاط أي خطأ عام في المتصفح وعرضه فوراً
+    window.onerror = function(message, source, lineno, colno, error) {
+      printToConsole("[CRITICAL ERROR] " + message + " (Line: " + lineno + ")");
+      return false;
+    };
+
+    // ضبط Auto JB ليكون غير مفعل افتراضياً
     if (localStorage.getItem("autoJb") === null) {
       localStorage.setItem("autoJb", "false");
     }
   </script>
 
-  <!-- استدعاء ملفات السكريبت الأساسية -->
+  <!-- تحميل السكريبتات الخارجية -->
   <script src="src/main.js"></script>
   <script src="includes/script.js"></script>
 
