@@ -92,7 +92,7 @@
       font-weight: bold;
     }
 
-    #jailbreak, #jeilbrek {
+    #jeilbrek {
       background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
       color: #000;
       font-weight: bold;
@@ -105,9 +105,17 @@
       box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
     }
 
-    #jailbreak:hover, #jeilbrek:hover {
+    #jeilbrek:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5);
+    }
+
+    #jeilbrek:disabled {
+      background: #555555;
+      color: #888888;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
     }
 
     .autoJb {
@@ -118,7 +126,7 @@
       margin-top: 5px;
     }
 
-    /* الكنسول بحجم ثابت ومحدد الارتفاع */
+    /* كنسول محدد الارتفاع وثابت الحجم */
     #console {
       display: block !important;
       direction: ltr !important;
@@ -132,9 +140,9 @@
       padding: 20px;
       max-width: 500px;
       width: 90%;
-      height: 180px;
+      height: 180px; /* ارتفاع ثابت */
       max-height: 250px;
-      overflow-y: auto;
+      overflow-y: auto; /* شريط تمرير */
       box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
       
       word-break: break-word;
@@ -159,7 +167,8 @@
         <label for="lapse-exploit">Lapse</label>
       </form>
 
-      <button id="jailbreak">Jailbreak</button>
+      <!-- الزر برقم ID المطابق لـ script.js -->
+      <button id="jeilbrek">Jailbreak</button>
 
       <div class="autoJb">
         <input id="autoJbInput" type="checkbox">
@@ -168,93 +177,18 @@
     </div>
   </div>
 
-  <pre id="console">Initializing Cache & System...</pre>
+  <pre id="console">Ready. Awaiting execution...</pre>
 
-  <!-- استدعاء ملفات السكريبت الأساسية -->
+  <script>
+    // تهيئة خيار autoJb ليكون غير مفعل (false) افتراضياً عند أول تشغيل
+    if (localStorage.getItem("autoJb") === null) {
+      localStorage.setItem("autoJb", "false");
+    }
+  </script>
+
+  <!-- استدعاء ملفات المشروع بالترتيب -->
   <script src="src/main.js"></script>
   <script src="includes/script.js"></script>
 
-  <script>
-    document.getElementById("UA").innerText = "Running on: " + navigator.userAgent;
-
-    function printConsole(text) {
-      const consoleElem = document.getElementById("console");
-      if (consoleElem) {
-        consoleElem.innerText += "\n" + text;
-        consoleElem.scrollTop = consoleElem.scrollHeight;
-      }
-    }
-
-    // ربط الزر للعمل بأي طريقة ممكنة داخل الملفات الخارجية
-    document.addEventListener("DOMContentLoaded", () => {
-      const btn = document.getElementById("jailbreak");
-      if (btn) {
-        btn.onclick = function(e) {
-          printConsole("[+] Jailbreak button clicked manually.");
-          
-          // محاولة استدعاء كل أنواع الدوال المحتملة في سكريبتات الجيلبريك
-          if (typeof load_payload === "function") load_payload();
-          else if (typeof load_exploit === "function") load_exploit();
-          else if (typeof run_jb === "function") run_jb();
-          else if (typeof poc === "function") poc();
-          else printConsole("[!] Executing script bindings...");
-        };
-      }
-    });
-
-    // إدارة خيار Auto Jailbreak (غير مفعل افتراضياً)
-    window.addEventListener('load', () => {
-      const autoJbInput = document.getElementById('autoJbInput');
-      const isAutoStored = localStorage.getItem('autoJb');
-
-      if (isAutoStored === 'true') {
-        if (autoJbInput) autoJbInput.checked = true;
-      } else {
-        if (autoJbInput) autoJbInput.checked = false;
-        localStorage.setItem('autoJb', 'false');
-      }
-
-      if (autoJbInput) {
-        autoJbInput.addEventListener('change', (e) => {
-          localStorage.setItem('autoJb', e.target.checked ? 'true' : 'false');
-        });
-      }
-    });
-
-    // تتبع حالة الكاش
-    if (window.applicationCache) {
-      const appCache = window.applicationCache;
-
-      appCache.addEventListener('checking', () => printConsole("Checking cache..."));
-      appCache.addEventListener('downloading', () => printConsole("Downloading offline cache..."));
-      appCache.addEventListener('progress', (e) => printConsole("Caching: " + Math.round((e.loaded / e.total) * 100) + "%"));
-      
-      appCache.addEventListener('cached', () => {
-        printConsole("Cached successfully! Ready.");
-        checkAutoJb();
-      });
-
-      appCache.addEventListener('noupdate', () => {
-        printConsole("Cache up to date. Ready.");
-        checkAutoJb();
-      });
-
-      appCache.addEventListener('error', () => {
-        printConsole("Cache error / offline mode active.");
-        checkAutoJb();
-      });
-    }
-
-    function checkAutoJb() {
-      const autoJbInput = document.getElementById('autoJbInput');
-      if (autoJbInput && autoJbInput.checked) {
-        printConsole("Auto Jailbreak enabled. Triggering...");
-        setTimeout(() => {
-          const btn = document.getElementById("jailbreak");
-          if (btn) btn.click();
-        }, 1000);
-      }
-    }
-  </script>
 </body>
 </html>
