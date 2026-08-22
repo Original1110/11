@@ -32,7 +32,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start; /* رفع المحتوى للـ أعلى */
+      justify-content: flex-start; /* رفع المحتوى للأعلى */
       min-height: 100vh;
       padding: 30px 20px;
       gap: 20px;
@@ -113,34 +113,24 @@
       box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5);
     }
 
-    .autoJb {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.95rem;
-      margin-top: 5px;
-    }
-
-    /* تنسيق الكنسول بشكل احترافي وأنيق اسفل الصندوق */
+    /* الكنسول بخلفية زجاجية وبدء الكتابة من اليسار */
     #console {
       display: block !important;
-      background: rgba(10, 10, 18, 0.85);
-      border: 1px solid rgba(0, 242, 254, 0.3);
-      border-radius: 12px;
-      padding: 15px 20px;
+      direction: ltr !important;
+      text-align: left !important;
+      
+      background: rgba(15, 15, 25, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 20px;
       max-width: 500px;
       width: 90%;
-      color: #00f2fe;
-      font-family: 'Consolas', 'Courier New', monospace;
-      font-size: 0.95rem;
-      line-height: 1.5;
-      text-align: right;
-      direction: ltr; /* جعل اتجاه نصوص الكنسول من اليسار لليمين */
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+      
       word-break: break-word;
       white-space: pre-wrap;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
     }
 
     /* إخفاء العناصر غير المرغوبة فقط */
@@ -151,7 +141,7 @@
 </head>
 <body>
 
-  <!-- صندوق التحكم الرئيسي مرتفع للأعلى -->
+  <!-- صندوق التحكم الرئيسي -->
   <div class="container">
     <h1>Original Host</h1>
     <h3 id="UA">Running on:</h3>
@@ -168,49 +158,13 @@
       </form>
 
       <button id="jeilbrek">Jeilbrek</button>
-
-      <div class="autoJb">
-        <input id="autoJbInput" type="checkbox">
-        <label for="autoJbInput" id="autoJbLabel">Auto Jailbreak</label>
-      </div>
     </div>
   </div>
 
-  <!-- الكنسول الظاهر أسفل الصندوق بتصميم زجاجي واحترافي -->
+  <!-- الكنسول الزجاجي -->
   <pre id="console">Ready. Awaiting execution...</pre>
 
   <script src="src/main.js"></script>
   <script src="includes/script.js"></script>
-
-  <!-- كود التفعيل والتشغيل التلقائي المباشر (نفس الكود الخفيف الأصلي) -->
-  <script>
-    window.addEventListener('load', () => {
-      const autoJbInput = document.getElementById('autoJbInput');
-      const jbButton = document.getElementById('jeilbrek');
-
-      // 1. استرجاع حالة الحفظ السابقة إذا وجدت، أو التفعيل الافتراضي
-      const isAutoStored = localStorage.getItem('autoJb');
-      
-      if (isAutoStored === null || isAutoStored === 'true') {
-        if (autoJbInput) autoJbInput.checked = true;
-        localStorage.setItem('autoJb', 'true');
-        
-        setTimeout(() => {
-          if (jbButton) {
-            jbButton.click();
-          }
-        }, 1000);
-      } else {
-        if (autoJbInput) autoJbInput.checked = false;
-      }
-
-      // 2. تحديث الحفظ فور تغيير خيار التشغيل التلقائي من المستخدم
-      if (autoJbInput) {
-        autoJbInput.addEventListener('change', (e) => {
-          localStorage.setItem('autoJb', e.target.checked ? 'true' : 'false');
-        });
-      }
-    });
-  </script>
 </body>
 </html>
