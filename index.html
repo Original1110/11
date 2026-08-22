@@ -12,7 +12,7 @@
       padding: 0;
     }
 
-    /* ضبط خلفية الصفحة لترميها وتتناسب مع جميع الشاشات */
+    /* ضبط خلفية الصفحة لتتناسب مع جميع الشاشات */
     html, body {
       width: 100%;
       height: 100%;
@@ -22,31 +22,31 @@
     }
 
     body {
-      /* قم بتغيير 'custom-bg.jpg' باسم ملف الصورة الخاص بك */
       background-image: url('icon0.jpg');
-      background-size: 100% 95%;          /* تجعل الصورة تغطي كامل الشاشة دون تشويه */
-      background-position: center;      /* تمركز الصورة في الوسط تماماً */
-      background-repeat: no-repeat;    /* تمنع تكرار الصورة */
-      background-attachment: fixed;    /* ثبات الخلفية عند السكرول إن وجد */
-      background-color: #1a1a24;       /* لون احتياطي غامق في حال عدم تحميل الصورة */
+      background-size: 100% 95%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-color: #1a1a24;
 
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start; /* رفع المحتوى للـ أعلى */
       min-height: 100vh;
-      padding: 20px;
+      padding: 30px 20px;
+      gap: 20px;
       text-align: center;
     }
 
-    /* طبقة زجاجية شفافة فوق الخلفية لزيادة وضوح العناصر (اختياري) */
+    /* كارت التحكم الزجاجي */
     .container {
       background: rgba(15, 15, 25, 0.75);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 16px;
-      padding: 30px;
+      padding: 25px 30px;
       max-width: 500px;
       width: 90%;
       box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
@@ -63,14 +63,14 @@
       font-size: 1.1rem;
       font-weight: 400;
       color: #00f2fe;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
 
     hr {
       border: none;
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-      margin: 15px 0 25px 0;
+      margin: 15px 0 20px 0;
     }
 
     .btn-container {
@@ -121,14 +121,37 @@
       margin-top: 5px;
     }
 
-    /* إخفاء العناصر غير المرغوبة تلقائياً مع الإبقاء عليها في الـ DOM برمجياً */
-    .media-box, #console, .hidden {
+    /* تنسيق الكنسول بشكل احترافي وأنيق اسفل الصندوق */
+    #console {
+      display: block !important;
+      background: rgba(10, 10, 18, 0.85);
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      border-radius: 12px;
+      padding: 15px 20px;
+      max-width: 500px;
+      width: 90%;
+      color: #00f2fe;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      text-align: right;
+      direction: ltr; /* جعل اتجاه نصوص الكنسول من اليسار لليمين */
+      word-break: break-word;
+      white-space: pre-wrap;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    /* إخفاء العناصر غير المرغوبة فقط */
+    .media-box, .hidden-box {
       display: none !important;
     }
   </style>
 </head>
 <body>
 
+  <!-- صندوق التحكم الرئيسي مرتفع للأعلى -->
   <div class="container">
     <h1>Original Host</h1>
     <h3 id="UA">Running on:</h3>
@@ -153,13 +176,13 @@
     </div>
   </div>
 
-  <!-- العنصر الذي يحتاجه السكريبت البرمجي للطباعة مفعل كعنصر مخفي -->
-  <pre id="console" class="hidden">Ready. Awaiting execution...</pre>
+  <!-- الكنسول الظاهر أسفل الصندوق بتصميم زجاجي واحترافي -->
+  <pre id="console">Ready. Awaiting execution...</pre>
 
   <script src="src/main.js"></script>
   <script src="includes/script.js"></script>
 
-  <!-- كود التفعيل والتشغيل التلقائي المباشر -->
+  <!-- كود التفعيل والتشغيل التلقائي المباشر (نفس الكود الخفيف الأصلي) -->
   <script>
     window.addEventListener('load', () => {
       const autoJbInput = document.getElementById('autoJbInput');
@@ -168,12 +191,10 @@
       // 1. استرجاع حالة الحفظ السابقة إذا وجدت، أو التفعيل الافتراضي
       const isAutoStored = localStorage.getItem('autoJb');
       
-      // إذا لم تكن هناك حالة محفوظة سابقاً، نقوم بتفعيلها تلقائياً
       if (isAutoStored === null || isAutoStored === 'true') {
         if (autoJbInput) autoJbInput.checked = true;
         localStorage.setItem('autoJb', 'true');
         
-        // إعطاء مهلة زمنية قصيرة لضمان جاهزية السكريبتات الأساسية ثم الضغط تلقائياً
         setTimeout(() => {
           if (jbButton) {
             jbButton.click();
