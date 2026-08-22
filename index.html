@@ -126,7 +126,6 @@
       margin-top: 5px;
     }
 
-    /* كنسول محدد الارتفاع وثابت الحجم */
     #console {
       display: block !important;
       direction: ltr !important;
@@ -140,9 +139,9 @@
       padding: 20px;
       max-width: 500px;
       width: 90%;
-      height: 180px; /* ارتفاع ثابت */
+      height: 180px;
       max-height: 250px;
-      overflow-y: auto; /* شريط تمرير */
+      overflow-y: auto;
       box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
       
       word-break: break-word;
@@ -167,7 +166,6 @@
         <label for="lapse-exploit">Lapse</label>
       </form>
 
-      <!-- الزر برقم ID المطابق لـ script.js -->
       <button id="jeilbrek">Jailbreak</button>
 
       <div class="autoJb">
@@ -180,13 +178,28 @@
   <pre id="console">Ready. Awaiting execution...</pre>
 
   <script>
-    // تهيئة خيار autoJb ليكون غير مفعل (false) افتراضياً عند أول تشغيل
+    // 1. بناء كائن Logger وحقنه لمنع توقف دالة doJb()
+    function printToConsole(msg) {
+      const c = document.getElementById("console");
+      if (c) {
+        c.innerText += "\n" + msg;
+        c.scrollTop = c.scrollHeight;
+      }
+    }
+
+    window.logger = {
+      info: function(msg) { printToConsole("[INFO] " + msg); },
+      error: function(msg) { printToConsole("[ERROR] " + msg); },
+      log: function(msg) { printToConsole("[LOG] " + msg); }
+    };
+
+    // 2. ضبط خيار Auto Jailbreak ليكون غير مفعل افتراضياً
     if (localStorage.getItem("autoJb") === null) {
       localStorage.setItem("autoJb", "false");
     }
   </script>
 
-  <!-- استدعاء ملفات المشروع بالترتيب -->
+  <!-- استدعاء ملفات السكريبت الأساسية -->
   <script src="src/main.js"></script>
   <script src="includes/script.js"></script>
 
