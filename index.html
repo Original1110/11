@@ -5,14 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>شركة أورجينال أسيوط - ش الجمهورية - بجوار فرع فودافون</title>
   <style>
-    /* إعادة ضبط الهوامش والأبعاد */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
-    /* ضبط خلفية الصفحة لتتناسب مع جميع الشاشات */
     html, body {
       width: 100%;
       height: 100%;
@@ -39,7 +37,6 @@
       text-align: center;
     }
 
-    /* كارت التحكم الزجاجي */
     .container {
       background: rgba(15, 15, 25, 0.75);
       backdrop-filter: blur(8px);
@@ -95,8 +92,7 @@
       font-weight: bold;
     }
 
-    /* إضافة التسميتين لشكل الزر لتفادي أي تعارض */
-    #jailbreak, #jeilbrek {
+    #jailbreak {
       background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
       color: #000;
       font-weight: bold;
@@ -109,12 +105,11 @@
       box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
     }
 
-    #jailbreak:hover, #jeilbrek:hover {
+    #jailbreak:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5);
     }
 
-    /* الكنسول الزجاجي */
     #console {
       display: block !important;
       direction: ltr !important;
@@ -133,15 +128,10 @@
       word-break: break-word;
       white-space: pre-wrap;
     }
-
-    .media-box, .hidden-box {
-      display: none !important;
-    }
   </style>
 </head>
 <body>
 
-  <!-- صندوق التحكم الرئيسي -->
   <div class="container">
     <h1>Original Host</h1>
     <h3 id="UA">Running on:</h3>
@@ -157,32 +147,74 @@
         <label for="lapse-exploit">Lapse</label>
       </form>
 
-      <!-- تم تعديل الـ ID إلى jailbreak ومطابقته للسكريبت الأصلي -->
-      <button id="jailbreak">Jailbreak</button>
+      <button id="jailbreak" onclick="startJailbreak()">Jailbreak</button>
     </div>
   </div>
 
-  <!-- الكنسول الزجاجي -->
-  <pre id="console">Ready. Awaiting execution...</pre>
+  <pre id="console">Initializing Cache & System...</pre>
 
+  <!-- استدعاء ملفات الثغرة الأساسية -->
   <script src="src/main.js"></script>
   <script src="includes/script.js"></script>
 
-  <!-- سكريبت طوارئ لضمان استدعاء الدالة البرمجية المخصصة في الملفات عند الضغط -->
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const btn = document.getElementById("jailbreak");
-      if (btn) {
-        btn.addEventListener("click", () => {
-          // استدعي الدالة الرئيسية إن وجِدت في ملفاتك الخارجيّة
-          if (typeof runJailbreak === "function") {
-            runJailbreak();
-          } else if (typeof main === "function") {
-            main();
-          }
-        });
+    // 1. عرض معومات الجهاز
+    document.getElementById("UA").innerText = "Running on: " + navigator.userAgent;
+
+    function printConsole(text) {
+      const consoleElem = document.getElementById("console");
+      if (consoleElem) {
+        consoleElem.innerText += "\n" + text;
       }
-    });
+    }
+
+    // 2. معالجة وتتبع حفظ الكاش (Cache Progress)
+    if (window.applicationCache) {
+      const appCache = window.applicationCache;
+
+      appCache.addEventListener('checking', () => {
+        printConsole("Checking for cache manifest...");
+      });
+
+      appCache.addEventListener('downloading', () => {
+        printConsole("Caching offline files... Please wait.");
+      });
+
+      appCache.addEventListener('progress', (e) => {
+        printConsole("Caching: " + Math.round((e.loaded / e.total) * 100) + "%");
+      });
+
+      appCache.addEventListener('cached', () => {
+        printConsole("Page cached successfully! Offline mode ready.");
+      });
+
+      appCache.addEventListener('noupdate', () => {
+        printConsole("Cache is up to date.");
+      });
+
+      appCache.addEventListener('error', (e) => {
+        printConsole("Cache Error! Check if cache.manifest exists.");
+      });
+    }
+
+    // 3. تشغيل الثغرة عند الضغط على الزر
+    function startJailbreak() {
+      printConsole("Starting Exploit Execution...");
+      
+      const selectedKernel = document.querySelector('input[name="kernel"]:checked').value;
+      printConsole("Selected Payload: " + selectedKernel);
+
+      // محاولة استدعاء الدوال الخاصة بالملفات الخارجية
+      if (typeof load_exploit === "function") {
+        load_exploit(selectedKernel);
+      } else if (typeof runJailbreak === "function") {
+        runJailbreak();
+      } else if (typeof main === "function") {
+        main();
+      } else {
+        printConsole("Error: Main exploit script function not found in JS files!");
+      }
+    }
   </script>
 </body>
 </html>
