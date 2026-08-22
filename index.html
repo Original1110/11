@@ -92,7 +92,7 @@
       font-weight: bold;
     }
 
-    #jailbreak {
+    #jailbreak, #jeilbrek {
       background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
       color: #000;
       font-weight: bold;
@@ -105,7 +105,7 @@
       box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
     }
 
-    #jailbreak:hover {
+    #jailbreak:hover, #jeilbrek:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5);
     }
@@ -147,18 +147,18 @@
         <label for="lapse-exploit">Lapse</label>
       </form>
 
-      <button id="jailbreak" onclick="startJailbreak()">Jailbreak</button>
+      <!-- إنشاء الزر مع المعرفين لمطابقة أي ملف خارجي -->
+      <button id="jailbreak">Jailbreak</button>
     </div>
   </div>
 
   <pre id="console">Initializing Cache & System...</pre>
 
-  <!-- استدعاء ملفات الثغرة الأساسية -->
+  <!-- استدعاء ملفات السكريبت الأساسية بالترتيب الأصلي -->
   <script src="src/main.js"></script>
   <script src="includes/script.js"></script>
 
   <script>
-    // 1. عرض معومات الجهاز
     document.getElementById("UA").innerText = "Running on: " + navigator.userAgent;
 
     function printConsole(text) {
@@ -168,52 +168,16 @@
       }
     }
 
-    // 2. معالجة وتتبع حفظ الكاش (Cache Progress)
+    // تتبع حالة الكاش والأوفلاين
     if (window.applicationCache) {
       const appCache = window.applicationCache;
 
-      appCache.addEventListener('checking', () => {
-        printConsole("Checking for cache manifest...");
-      });
-
-      appCache.addEventListener('downloading', () => {
-        printConsole("Caching offline files... Please wait.");
-      });
-
-      appCache.addEventListener('progress', (e) => {
-        printConsole("Caching: " + Math.round((e.loaded / e.total) * 100) + "%");
-      });
-
-      appCache.addEventListener('cached', () => {
-        printConsole("Page cached successfully! Offline mode ready.");
-      });
-
-      appCache.addEventListener('noupdate', () => {
-        printConsole("Cache is up to date.");
-      });
-
-      appCache.addEventListener('error', (e) => {
-        printConsole("Cache Error! Check if cache.manifest exists.");
-      });
-    }
-
-    // 3. تشغيل الثغرة عند الضغط على الزر
-    function startJailbreak() {
-      printConsole("Starting Exploit Execution...");
-      
-      const selectedKernel = document.querySelector('input[name="kernel"]:checked').value;
-      printConsole("Selected Payload: " + selectedKernel);
-
-      // محاولة استدعاء الدوال الخاصة بالملفات الخارجية
-      if (typeof load_exploit === "function") {
-        load_exploit(selectedKernel);
-      } else if (typeof runJailbreak === "function") {
-        runJailbreak();
-      } else if (typeof main === "function") {
-        main();
-      } else {
-        printConsole("Error: Main exploit script function not found in JS files!");
-      }
+      appCache.addEventListener('checking', () => printConsole("Checking cache..."));
+      appCache.addEventListener('downloading', () => printConsole("Downloading offline cache..."));
+      appCache.addEventListener('progress', (e) => printConsole("Caching: " + Math.round((e.loaded / e.total) * 100) + "%"));
+      appCache.addEventListener('cached', () => printConsole("Cached successfully! Ready for offline use."));
+      appCache.addEventListener('noupdate', () => printConsole("Cache up to date."));
+      appCache.addEventListener('error', () => printConsole("Cache Error! Make sure cache.manifest is present."));
     }
   </script>
 </body>
