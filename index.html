@@ -110,6 +110,15 @@
       box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5);
     }
 
+    .autoJb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+      margin-top: 5px;
+    }
+
+    /* الكنسول بحجم ثابت ومحدد الارتفاع لمنع التمدد المفرط */
     #console {
       display: block !important;
       direction: ltr !important;
@@ -123,6 +132,9 @@
       padding: 20px;
       max-width: 500px;
       width: 90%;
+      height: 180px; /* ارتفاع ثابت */
+      max-height: 250px;
+      overflow-y: auto; /* شريط تمرير عند زيادة السطور */
       box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
       
       word-break: break-word;
@@ -148,6 +160,12 @@
       </form>
 
       <button id="jailbreak">Jailbreak</button>
+
+      <!-- خيار Auto Jailbreak غير مفعل افتراضياً -->
+      <div class="autoJb">
+        <input id="autoJbInput" type="checkbox">
+        <label for="autoJbInput" id="autoJbLabel">Auto Jailbreak</label>
+      </div>
     </div>
   </div>
 
@@ -164,19 +182,33 @@
       const consoleElem = document.getElementById("console");
       if (consoleElem) {
         consoleElem.innerText += "\n" + text;
+        consoleElem.scrollTop = consoleElem.scrollHeight; // التمرير التلقائي لأسفل
       }
     }
 
-    // إطلاق الثغرة تلقائياً فور اكتمال الجاهزية
-    function triggerExploit() {
-      printConsole("Triggering Exploit...");
-      const btn = document.getElementById("jailbreak");
-      if (btn) {
-        btn.click(); // محاكاة ضغطة المستخدم لتشغيل الأكواد المربوطة بالزر
-      }
-    }
+    // إدارة التفعيل التلقائي بحسب مربع الاختيار
+    window.addEventListener('load', () => {
+      const autoJbInput = document.getElementById('autoJbInput');
+      const jbButton = document.getElementById('jailbreak');
 
-    // تتبع حالة الكاش وبدء تشغيل الثغرة
+      // 1. استرجاع وتحديد الحالة الحالية (غير مفعل افتراضياً)
+      const isAutoStored = localStorage.getItem('autoJb');
+      if (isAutoStored === 'true') {
+        if (autoJbInput) autoJbInput.checked = true;
+      } else {
+        if (autoJbInput) autoJbInput.checked = false;
+        localStorage.setItem('autoJb', 'false');
+      }
+
+      // 2. تتبع التغيير من قبل المستخدم
+      if (autoJbInput) {
+        autoJbInput.addEventListener('change', (e) => {
+          localStorage.setItem('autoJb', e.target.checked ? 'true' : 'false');
+        });
+      }
+    });
+
+    // تتبع حالة الكاش
     if (window.applicationCache) {
       const appCache = window.applicationCache;
 
@@ -185,24 +217,30 @@
       appCache.addEventListener('progress', (e) => printConsole("Caching: " + Math.round((e.loaded / e.total) * 100) + "%"));
       
       appCache.addEventListener('cached', () => {
-        printConsole("Cached successfully! Launching Jailbreak...");
-        setTimeout(triggerExploit, 1000);
+        printConsole("Cached successfully! Ready.");
+        checkAutoJb();
       });
 
       appCache.addEventListener('noupdate', () => {
-        printConsole("Cache up to date. Launching Jailbreak...");
-        setTimeout(triggerExploit, 1000);
+        printConsole("Cache up to date. Ready.");
+        checkAutoJb();
       });
 
       appCache.addEventListener('error', () => {
-        printConsole("Cache Event Ended. Attempting Launch...");
-        setTimeout(triggerExploit, 1000);
+        printConsole("Cache error or already cached.");
+        checkAutoJb();
       });
-    } else {
-      // في حال تشغيل الصفحة بدون بروتوكول الكاش
-      window.addEventListener('load', () => {
-        setTimeout(triggerExploit, 1000);
-      });
+    }
+
+    function checkAutoJb() {
+      const autoJbInput = document.getElementById('autoJbInput');
+      if (autoJbInput && autoJbInput.checked) {
+        printConsole("Auto Jailbreak enabled. Triggering...");
+        setTimeout(() => {
+          const btn = document.getElementById("jailbreak");
+          if (btn) btn.click();
+        }, 1000);
+      }
     }
   </script>
 </body>
