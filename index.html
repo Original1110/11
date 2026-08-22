@@ -32,59 +32,62 @@
       align-items: center;
       justify-content: flex-start;
       min-height: 100vh;
-      padding: 30px 20px;
+      padding: 40px 20px;
       gap: 20px;
       text-align: center;
     }
 
+    /* تكبير الصندوق الرئيسي */
     .container {
       background: rgba(15, 15, 25, 0.75);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 16px;
-      padding: 25px 30px;
-      max-width: 500px;
-      width: 90%;
+      border-radius: 20px;
+      padding: 35px 40px;
+      max-width: 580px; /* تم تكبير الحجم من 500px */
+      width: 95%;
       box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+      margin-bottom: 20px; /* مسافة إضافية أسفل الصندوق */
     }
 
     h1 {
-      font-size: 2rem;
-      margin-bottom: 8px;
+      font-size: 2.3rem;
+      margin-bottom: 10px;
       color: #4facfe;
       text-shadow: 0 2px 4px rgba(0,0,0,0.5);
     }
 
     h3 {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       font-weight: 400;
       color: #00f2fe;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
     }
 
     hr {
       border: none;
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-      margin: 15px 0 20px 0;
+      margin: 20px 0 25px 0;
     }
 
     .btn-container {
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 20px;
       align-items: center;
     }
 
     #kernel-options {
       display: flex;
-      gap: 20px;
+      gap: 25px;
       justify-content: center;
       align-items: center;
       background: rgba(0, 0, 0, 0.3);
-      padding: 10px 20px;
+      padding: 12px 25px;
       border-radius: 30px;
+      font-size: 1.05rem;
     }
 
     #kernel-options label {
@@ -92,22 +95,23 @@
       font-weight: bold;
     }
 
+    /* تكبير زر الجيلبريك */
     #jeilbrek {
       background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
       color: #000;
       font-weight: bold;
-      font-size: 1.2rem;
+      font-size: 1.4rem; /* كبّرنا الخط */
       border: none;
-      padding: 12px 35px;
-      border-radius: 25px;
+      padding: 16px 50px; /* كبّرنا الأبعاد والمسافات */
+      border-radius: 30px;
       cursor: pointer;
       transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+      box-shadow: 0 6px 20px rgba(0, 242, 254, 0.4);
     }
 
     #jeilbrek:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 242, 254, 0.6);
     }
 
     #jeilbrek:disabled {
@@ -121,11 +125,12 @@
     .autoJb {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 0.95rem;
+      gap: 10px;
+      font-size: 1rem;
       margin-top: 5px;
     }
 
+    /* إنزال الكنسول للأسفل وإعطائه مسافة مستقلة */
     #console {
       display: block !important;
       direction: ltr !important;
@@ -137,8 +142,8 @@
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 16px;
       padding: 20px;
-      max-width: 500px;
-      width: 90%;
+      max-width: 580px; /* مطابق لعرض الصندوق الأعلى */
+      width: 95%;
       height: 180px;
       max-height: 250px;
       overflow-y: auto;
@@ -146,6 +151,7 @@
       
       word-break: break-word;
       white-space: pre-wrap;
+      margin-top: 15px; /* إبعاد الكنسول للأسفل عن الصندوق */
     }
   </style>
 </head>
@@ -178,7 +184,6 @@
   <pre id="console">Ready. Awaiting execution...</pre>
 
   <script>
-    // 1. نظام شاشة الكنسول
     function printToConsole(msg) {
       const c = document.getElementById("console");
       if (c) {
@@ -187,7 +192,6 @@
       }
     }
 
-    // 2. كائن logger لتفادي أخطاء ReferenceError
     window.logger = {
       info: function(msg) { printToConsole("[+] " + msg); },
       error: function(msg) { printToConsole("[!] ERROR: " + msg); },
@@ -199,7 +203,6 @@
       return false;
     };
 
-    // 3. دالة تحميل الملفات الديناميكية
     function load_script(src, remote = true, transfer = []) {
       return new Promise((resolve, reject) => {
         const script = document.createElement("script");
@@ -210,7 +213,6 @@
       });
     }
 
-    // 4. كود doJb الرئيسي المدمج بالكامل
     async function doJb() {
       await load_script("src/misc.js");
 
@@ -320,13 +322,11 @@
       }
     }
 
-    // إيقاف Auto JB التلقائي عند أول تشغيل
     if (localStorage.getItem("autoJb") === null) {
       localStorage.setItem("autoJb", "false");
     }
   </script>
 
-  <!-- تحميل ملف الواجهة والأحداث الوحيد المتبقي -->
   <script src="includes/script.js"></script>
 
 </body>
